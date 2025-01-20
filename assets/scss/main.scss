@@ -1,0 +1,34 @@
+@use './colors';
+@use './font';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: colors.$bg-primary;
+  font-family: font.$font;
+  color: colors.$text-primary;
+}
+
+a {
+  text-decoration: none;
+  color: colors.$text-primary;
+
+  &:hover {
+    color: colors.$text-secondary;
+    transition: 400ms;
+  }
+}
+
+ul {
+  list-style: none;
+}
+
+.custom-title {
+  font-weight: bold;
+  font-size: 3rem;
+  color: transparent;
+}
