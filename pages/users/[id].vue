@@ -4,7 +4,7 @@
     <ul>
       <li>Nome: {{ user?.name }}</li>
       <li>Email: {{ user?.email }}</li>
-      <li>Administrador: {{ user?.isAdmin }}</li>
+      <li>Cargo:{{ mappedRoles }}</li>
       <li>Ativo: {{ user?.active }}</li>
     </ul>
   </div>
@@ -14,13 +14,21 @@
 import type { AuthDto, UserDto } from '~/DTO';
 
 definePageMeta({
-  middleware: ['auth-middlaware'],
+  middleware: ['admin-middlaware'],
 });
 
 const route = useRoute();
 const cookie = useCookie<AuthDto>('user');
 
 const user = ref<UserDto>();
+
+const mappedRoles = computed(() => {
+  const roles = { USER: 'Usuário', ADMIN: 'Administrador', MASTER: 'Master' };
+
+  return user.value?.userRole.name
+    ? roles[user.value?.userRole.name as keyof typeof roles]
+    : '-';
+});
 
 async function getById() {
   try {
@@ -32,7 +40,6 @@ async function getById() {
       },
     });
 
-    console.log(user.value);
   } catch (error) {
     console.error(error);
   }

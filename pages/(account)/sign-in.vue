@@ -49,8 +49,6 @@ async function handleSignIn(e: Event) {
       body: form.value,
     });
 
-    console.log(user.value);
-
     router.push('/');
   } catch (error) {
     console.error(error);

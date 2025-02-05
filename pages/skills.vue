@@ -44,7 +44,7 @@ const isEditing = ref(false);
 const cookie = useCookie<AuthDto>('user');
 
 const buttonLabel = computed(() => (isEditing.value ? 'Editar' : 'Adicionar'));
-const loggedUser = computed(() => cookie.value.user);
+const loggedUser = computed(() => cookie.value?.user);
 
 async function search() {
   try {

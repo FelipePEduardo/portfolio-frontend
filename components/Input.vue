@@ -1,7 +1,7 @@
 <template>
   <div class="field-wrapper">
     <span v-if="label" class="input-label">{{ label }}</span>
-    <div class="input-wrapper">
+    <div :class="['input-wrapper', size]">
       <input
         v-model="inputValue"
         :name="name"
@@ -16,6 +16,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+
 const inputValue = defineModel();
 
 defineProps({
@@ -39,6 +41,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  size: {
+    type: String as PropType<'is-small' | 'is-medium' | 'is-large'>,
+    default: 'is-medium',
+  },
 });
 </script>
 
@@ -58,6 +64,17 @@ defineProps({
     background-color: $bg-secondary;
     border-radius: 8px;
     border: 1px solid transparent;
+
+    &.is-small {
+      border: 1px solid $bg-tertiary;
+      max-height: 2rem;
+
+      padding: 0.2rem;
+
+      > input {
+        font-size: 0.9rem;
+      }
+    }
 
     &:focus-within {
       border: 1px solid $bg-tertiary;

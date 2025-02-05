@@ -6,18 +6,24 @@
       :count="count"
       clickable-row
       @click-row="handleNavigateToUser"
+      @filter-change="changeFilter"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { AuthDto, SearchResponse, UserSearchDto } from '~/DTO';
+import { mountUrl } from '~/helpers/mountUrl';
 
 definePageMeta({
   middleware: ['admin-middlaware'],
 });
 
 const cookie = useCookie<AuthDto>('user');
+
+const data = ref<UserSearchDto[]>([]);
+const count = ref(0);
+const filters = ref<Record<string, unknown>>({});
 
 const headers = computed(() => [
   {
@@ -31,21 +37,20 @@ const headers = computed(() => [
   {
     field: 'name',
     label: 'Nome',
+    searchable: true,
   },
   {
     field: 'email',
     label: 'Email',
+    searchable: true,
   },
 ]);
 
-const data = ref<UserSearchDto[]>([]);
-const count = ref(0);
-
-async function searchUsers() {
+async function search() {
   try {
-    const { data: apiData, count: apiCount } = await $fetch<
-      SearchResponse<UserSearchDto>
-    >(`http://localhost:3000/users/search`, {
+    const url = mountUrl('http://localhost:3000/users/search', filters.value);
+
+    const { data: apiData, count: apiCount } = await $fetch<SearchResponse<UserSearchDto>>(url, {
       headers: {
         Authorization: `Bearer ${cookie.value.token}`,
       },
@@ -58,11 +63,20 @@ async function searchUsers() {
   }
 }
 
+async function changeFilter(newFilters: Record<string, unknown>) {
+  filters.value = {
+    name_contains: newFilters['name'],
+    email_contains: newFilters['email'],
+  };
+
+  await search();
+}
+
 function handleNavigateToUser(row: UserSearchDto) {
   navigateTo(`/users/${row.id}`);
 }
 
-onBeforeMount(searchUsers);
+onBeforeMount(search);
 </script>
 
 <style lang="scss">

@@ -10,6 +10,18 @@
               </th>
             </template>
           </tr>
+          <tr>
+            <template v-for="header in headers" :key="header">
+              <th>
+                <Input
+                  v-model="filters[header.field]"
+                  v-if="header.searchable"
+                  :name="header.field"
+                  size="is-small"
+                />
+              </th>
+            </template>
+          </tr>
         </thead>
         <tbody>
           <template v-for="row in data" :key="row">
@@ -21,6 +33,9 @@
                 @click="() => (clickableRow ? emit('click-row', row) : null)"
               >
                 {{ getColumnData(row, column) }}
+                <template v-if="$slots[column.field]">
+                  <slot :name="column.field" />
+                </template>
               </td>
             </tr>
           </template>
@@ -41,7 +56,8 @@ import type { PropType } from 'vue';
 
 type HeaderType = {
   field: string;
-  label: string;
+  label?: string;
+  searchable?: boolean;
 };
 
 const props = defineProps({
@@ -63,7 +79,16 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<{ (e: 'click-row', data: any): void }>();
+const emit = defineEmits<{
+  (e: 'click-row', data: any): void;
+  (e: 'filter-change', data: Record<string, unknown>): void;
+}>();
+
+/* #region Data */
+
+const filters = ref<Record<string, unknown>>({});
+
+/* #endregion */
 
 /* #region Computed */
 
@@ -94,6 +119,20 @@ function getColumnData(row: any, column: HeaderType) {
   return columnValue;
 }
 
+function handleFilterChange(value: Record<string, unknown>) {
+  emit('filter-change', value);
+}
+/* #endregion */
+
+/* #region Watchers */
+
+watch(
+  filters,
+  (newValue) => {
+    handleFilterChange(newValue);
+  },
+  { deep: true }
+);
 /* #endregion */
 </script>
 
