@@ -4,6 +4,6 @@ export default defineNuxtRouteMiddleware(() => {
   const cookie = useCookie<AuthDto>('user');
 
   if (!cookie.value.token) {
-    return abortNavigation();
+    return '/sign-in';
   }
 });

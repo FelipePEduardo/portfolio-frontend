@@ -6,10 +6,24 @@
       <div class="information-wrapper">
         <img :src="data?.avatar_url" alt="" />
         <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo
-          necessitatibus temporibus corrupti quia doloremque unde culpa laborum
-          accusantium architecto, neque natus nemo sed suscipit. Laboriosam
-          similique eos amet esse odit.
+          Me chamo Felipe Pereira Eduardo, tenho 21 anos e moro em Santo André,
+          São Paulo.
+          <br />
+          <br />
+          Atualmente estou atuando como desenvolvedor Full-Stack Pleno na
+          <a
+            href="https://www.linkedin.com/company/tbdcagro/posts/?feedView=all"
+            style="text-decoration: underline"
+          >
+            @TBDC AgroSoftware </a
+          >. Atuo utilizando ferramentas como Vuejs, Nodejs, Typescript,
+          desenvolvendo features, aplicando refatorações e manutenções em
+          sistema web.
+          <br />
+          <br />
+          Me considero uma pessoa focada, persistente em aprender uma nova
+          linguagem e me adaptar à qualquer mudança. Estou pronto para superar
+          qualquer desafio, sempre disposto a aprender e ensinar.
         </p>
       </div>
 

@@ -15,18 +15,20 @@
       <div class="skills-wrapper">
         <div v-for="skill in data" class="skill">
           <span>{{ skill.name }}</span>
-          <button
+          <div
             v-if="checkIfUserIsMaster(loggedUser) && skill.active"
             @click="handleEdit(skill)"
+            class="icon-wrapper"
           >
-            Editar
-          </button>
-          <button
+            <Icon name="material-symbols:edit-outline" style="color: orange" />
+          </div>
+          <div
             v-if="checkIfUserIsMaster(loggedUser)"
             @click="handleDelete(skill)"
+            class="icon-wrapper"
           >
-            Deletar
-          </button>
+            <Icon name="material-symbols:delete-outline" style="color: red" />
+          </div>
         </div>
       </div>
     </div>
@@ -60,7 +62,7 @@ async function search() {
 
 function handleEdit(skill: SkillSearchDto) {
   isEditing.value = true;
-  form.value = skill;
+  form.value = { ...skill };
 }
 
 function addOrUpdateSkill() {
@@ -171,6 +173,10 @@ onBeforeMount(search);
 
       button {
         margin-left: auto;
+      }
+
+      .icon-wrapper {
+        max-height: 24px;
       }
     }
   }

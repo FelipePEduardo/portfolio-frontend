@@ -92,7 +92,7 @@ const filters = ref<Record<string, unknown>>({});
 
 /* #region Computed */
 
-const countLabel = computed(() => `1 de ${props.count} resultados`);
+const countLabel = computed(() => `${props.count} resultados`);
 
 /* #endregion */
 

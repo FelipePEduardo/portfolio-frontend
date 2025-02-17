@@ -16,7 +16,7 @@ import type { AuthDto, SearchResponse, UserSearchDto } from '~/DTO';
 import { mountUrl } from '~/helpers/mountUrl';
 
 definePageMeta({
-  middleware: ['admin-middlaware'],
+  middleware: ['admin-master-middlaware'],
 });
 
 const cookie = useCookie<AuthDto>('user');

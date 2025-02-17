@@ -1,12 +1,25 @@
 <template>
   <div class="user-profile-wrapper">
-    <img src="https://github.com/felipePEduardo.png" alt="profile" />
+    <div class="icon-wrapper">
+      <Icon name="material-symbols:person" size="50" />
+    </div>
     <ul>
       <li>Nome: {{ user?.name }}</li>
       <li>Email: {{ user?.email }}</li>
-      <li>Cargo:{{ mappedRoles }}</li>
-      <li>Ativo: {{ user?.active }}</li>
+
+      <li>
+        Cargo:
+        <Select
+          v-if="user"
+          v-model="user.userRole.name"
+          :options="selectOptions"
+          name="user-role"
+        />
+      </li>
+      <li>Ativo: {{ user?.active ? 'Sim' : 'Não' }}</li>
     </ul>
+
+    <Button label="Salvar" @click="save" />
   </div>
 </template>
 
@@ -14,21 +27,18 @@
 import type { AuthDto, UserDto } from '~/DTO';
 
 definePageMeta({
-  middleware: ['admin-middlaware'],
+  middleware: ['admin-master-middlaware'],
 });
 
 const route = useRoute();
 const cookie = useCookie<AuthDto>('user');
 
 const user = ref<UserDto>();
-
-const mappedRoles = computed(() => {
-  const roles = { USER: 'Usuário', ADMIN: 'Administrador', MASTER: 'Master' };
-
-  return user.value?.userRole.name
-    ? roles[user.value?.userRole.name as keyof typeof roles]
-    : '-';
-});
+const selectOptions = ref([
+  { field: 'Usuário', value: 'USER' },
+  { field: 'Administrador', value: 'ADMIN' },
+  { field: 'Master', value: 'MASTER' },
+]);
 
 async function getById() {
   try {
@@ -39,7 +49,24 @@ async function getById() {
         Authorization: `Bearer ${cookie.value.token}`,
       },
     });
+  } catch (error) {
+    console.error(error);
+  }
+}
 
+async function save() {
+  try {
+    const id = Number(route.params.id);
+
+    user.value = await $fetch<UserDto>(`http://localhost:3000/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${cookie.value.token}`,
+      },
+      method: 'PATCH',
+      body: { ...user.value, userRole: user.value?.userRole.name },
+    });
+
+    window.alert('Usuário atualizado');
   } catch (error) {
     console.error(error);
   }
@@ -50,11 +77,21 @@ onMounted(getById);
 
 <style lang="scss" scoped>
 .user-profile-wrapper {
-  img {
-    max-width: 15rem;
-    border-radius: 50%;
+  ul {
     margin-bottom: 1rem;
-    text-align: center;
+  }
+
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 15rem;
+    width: 15rem;
+    border: 1px solid $text-primary;
+    border-radius: 50%;
+
+    margin-bottom: 1rem;
   }
 
   li + li {
