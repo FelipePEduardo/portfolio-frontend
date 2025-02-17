@@ -84,6 +84,7 @@ async function create() {
     });
 
     window.alert('Criado com sucesso');
+    form.value = {};
     await search();
   } catch (error) {
     console.error(error);
@@ -101,6 +102,7 @@ async function update() {
     });
 
     window.alert('Atualizado com sucesso');
+    form.value = {};
     await search();
   } catch (error) {
     console.error(error);
