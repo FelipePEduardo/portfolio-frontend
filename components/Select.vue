@@ -1,5 +1,5 @@
 <template>
-  <select v-model="selectValue" :name="name">
+  <select v-model="selectValue" :name="name" :disabled="disabled">
     <option v-for="option in options" :value="option.value">
       {{ option.field }}
     </option>
@@ -17,6 +17,10 @@ defineProps({
   options: {
     type: Array as PropType<{ field: string; value: string }[]>,
     default: () => [],
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 

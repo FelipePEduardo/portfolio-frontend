@@ -13,6 +13,7 @@
           v-if="user"
           v-model="user.userRole.name"
           :options="selectOptions"
+          :disabled="user.userRole.name !== 'MASTER'"
           name="user-role"
         />
       </li>
@@ -44,11 +45,14 @@ async function getById() {
   try {
     const id = Number(route.params.id);
 
-    user.value = await $fetch<UserDto>(`https://portfolio-backend-fnac.onrender.com/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${cookie.value.token}`,
-      },
-    });
+    user.value = await $fetch<UserDto>(
+      `https://portfolio-backend-fnac.onrender.com/users/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${cookie.value.token}`,
+        },
+      }
+    );
   } catch (error) {
     console.error(error);
   }
@@ -58,13 +62,16 @@ async function save() {
   try {
     const id = Number(route.params.id);
 
-    user.value = await $fetch<UserDto>(`https://portfolio-backend-fnac.onrender.com/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${cookie.value.token}`,
-      },
-      method: 'PATCH',
-      body: { ...user.value, userRole: user.value?.userRole.name },
-    });
+    user.value = await $fetch<UserDto>(
+      `https://portfolio-backend-fnac.onrender.com/users/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${cookie.value.token}`,
+        },
+        method: 'PATCH',
+        body: { ...user.value, userRole: user.value?.userRole.name },
+      }
+    );
 
     window.alert('Usuário atualizado');
   } catch (error) {
