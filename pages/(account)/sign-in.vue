@@ -44,7 +44,7 @@ async function handleSignIn(e: Event) {
   e.preventDefault();
 
   try {
-    user.value = await $fetch<AuthDto>('http://localhost:3000/auth/sign-in', {
+    user.value = await $fetch<AuthDto>('https://portfolio-backend-fnac.onrender.com/auth/sign-in', {
       method: 'post',
       body: form.value,
     });

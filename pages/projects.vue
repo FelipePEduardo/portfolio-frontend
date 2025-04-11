@@ -21,7 +21,7 @@ const data = ref<any[]>([]);
 
 async function getGithubRepositories() {
   try {
-    data.value = await $fetch<any[]>(`http://localhost:3000/github/repos`);
+    data.value = await $fetch<any[]>(`https://portfolio-backend-fnac.onrender.com/github/repos`);
   } catch (error) {
     console.error(error);
   }

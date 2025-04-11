@@ -44,7 +44,7 @@ async function getById() {
   try {
     const id = Number(route.params.id);
 
-    user.value = await $fetch<UserDto>(`http://localhost:3000/users/${id}`, {
+    user.value = await $fetch<UserDto>(`https://portfolio-backend-fnac.onrender.com/users/${id}`, {
       headers: {
         Authorization: `Bearer ${cookie.value.token}`,
       },
@@ -58,7 +58,7 @@ async function save() {
   try {
     const id = Number(route.params.id);
 
-    user.value = await $fetch<UserDto>(`http://localhost:3000/users/${id}`, {
+    user.value = await $fetch<UserDto>(`https://portfolio-backend-fnac.onrender.com/users/${id}`, {
       headers: {
         Authorization: `Bearer ${cookie.value.token}`,
       },

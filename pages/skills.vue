@@ -52,8 +52,7 @@ async function search() {
   try {
     const { data: apiData, count } = await $fetch<
       SearchResponse<SkillSearchDto>
-    >(`http://localhost:3000/skills/search`);
-
+    >(`https://portfolio-backend-fnac.onrender.com/skills/search`);
     data.value = apiData;
   } catch (error) {
     console.error(error);
@@ -75,7 +74,7 @@ function addOrUpdateSkill() {
 
 async function create() {
   try {
-    await $fetch(`http://localhost:3000/skills`, {
+    await $fetch(`https://portfolio-backend-fnac.onrender.com/skills`, {
       headers: {
         Authorization: `Bearer ${cookie.value.token}`,
       },
@@ -93,13 +92,16 @@ async function create() {
 
 async function update() {
   try {
-    await $fetch(`http://localhost:3000/skills/${form.value.id}`, {
-      headers: {
-        Authorization: `Bearer ${cookie.value.token}`,
-      },
-      method: 'PATCH',
-      body: form.value,
-    });
+    await $fetch(
+      `https://portfolio-backend-fnac.onrender.com/skills/${form.value.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${cookie.value.token}`,
+        },
+        method: 'PATCH',
+        body: form.value,
+      }
+    );
 
     window.alert('Atualizado com sucesso');
     form.value = {};
@@ -111,7 +113,7 @@ async function update() {
 
 async function handleDelete(skill: SkillSearchDto) {
   try {
-    await $fetch(`http://localhost:3000/skills/${skill.id}`, {
+    await $fetch(`https://portfolio-backend-fnac.onrender.com/skills/${skill.id}`, {
       headers: {
         Authorization: `Bearer ${cookie.value.token}`,
       },

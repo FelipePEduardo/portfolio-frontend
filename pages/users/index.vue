@@ -48,7 +48,7 @@ const headers = computed(() => [
 
 async function search() {
   try {
-    const url = mountUrl('http://localhost:3000/users/search', filters.value);
+    const url = mountUrl('https://portfolio-backend-fnac.onrender.com/users/search', filters.value);
 
     const { data: apiData, count: apiCount } = await $fetch<SearchResponse<UserSearchDto>>(url, {
       headers: {

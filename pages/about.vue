@@ -42,7 +42,7 @@ const data = ref();
 
 async function getGithubInformations() {
   try {
-    const apiData = await $fetch(`http://localhost:3000/github/user`);
+    const apiData = await $fetch(`https://portfolio-backend-fnac.onrender.com/github/user`);
 
     data.value = apiData;
   } catch (error) {

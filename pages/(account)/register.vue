@@ -45,7 +45,7 @@ async function handleCreateAccount(e: Event) {
   e.preventDefault();
 
   try {
-    await $fetch('http://localhost:3000/users', {
+    await $fetch('https://portfolio-backend-fnac.onrender.com/users', {
       method: 'post',
       body: form.value,
     });
