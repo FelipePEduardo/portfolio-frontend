@@ -6,7 +6,7 @@
       <div class="information-wrapper">
         <img :src="data?.avatar_url" alt="" />
         <p>
-          Me chamo Felipe Pereira Eduardo, tenho 21 anos e moro em Santo André,
+          Me chamo Felipe Pereira Eduardo, tenho 23 anos e moro em Santo André,
           São Paulo.
           <br />
           <br />
