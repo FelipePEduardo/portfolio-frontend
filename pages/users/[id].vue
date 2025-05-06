@@ -44,6 +44,8 @@ const selectOptions = ref([
 ]);
 
 async function save() {
+  if (cookie.value.user?.userRole.name !== 'MASTER') return;
+
   try {
     const id = Number(route.params.id);
 
