@@ -13,7 +13,7 @@
           v-if="user"
           v-model="user.userRole.name"
           :options="selectOptions"
-          :disabled="user.userRole.name !== 'MASTER'"
+          :disabled="cookie.user?.userRole.name !== 'MASTER'"
           name="user-role"
         />
       </li>
@@ -33,53 +33,33 @@ definePageMeta({
 
 const route = useRoute();
 const cookie = useCookie<AuthDto>('user');
+const { data: user } = await useAuthenticatedAPI<UserDto>(
+  `/users/${route.params.id}`
+);
 
-const user = ref<UserDto>();
 const selectOptions = ref([
   { field: 'Usuário', value: 'USER' },
   { field: 'Administrador', value: 'ADMIN' },
   { field: 'Master', value: 'MASTER' },
 ]);
 
-async function getById() {
-  try {
-    const id = Number(route.params.id);
-
-    user.value = await $fetch<UserDto>(
-      `https://portfolio-backend-fnac.onrender.com/users/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${cookie.value.token}`,
-        },
-      }
-    );
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function save() {
   try {
     const id = Number(route.params.id);
 
-    user.value = await $fetch<UserDto>(
-      `https://portfolio-backend-fnac.onrender.com/users/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${cookie.value.token}`,
-        },
-        method: 'PATCH',
-        body: { ...user.value, userRole: user.value?.userRole.name },
-      }
-    );
+    user.value = await internalFetchAPI(`/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${cookie.value.token}`,
+      },
+      method: 'PATCH',
+      body: { ...user.value, userRole: user.value?.userRole.name },
+    });
 
     window.alert('Usuário atualizado');
   } catch (error) {
     console.error(error);
   }
 }
-
-onMounted(getById);
 </script>
 
 <style lang="scss" scoped>

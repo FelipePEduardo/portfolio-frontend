@@ -3,35 +3,44 @@
     <h2 class="custom-title">Projetos</h2>
 
     <div class="projects-list">
-      <a
-        v-for="project in data"
-        :key="project.id"
-        class="project"
-        @click="handleNavigateToProject(project)"
-      >
-        <span>{{ project.name }}</span>
-        <p>{{ project.description }}</p>
-      </a>
+      <template v-if="isPending">
+        <Skeleton
+          v-for="skeleton in skeletonQuantity"
+          :key="skeleton"
+          width="12.5rem"
+          height="12.5rem"
+        />
+      </template> 
+      <template v-else>
+        <a
+          v-for="project in githubRepos"
+          :key="project.id"
+          class="project"
+          @click="handleNavigateToProject(project)"
+        >
+          <span>{{ project.name }}</span>
+          <p>{{ project.description }}</p>
+        </a>
+      </template>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-const data = ref<any[]>([]);
+import type { RepositoryDto } from '~/DTO';
 
-async function getGithubRepositories() {
-  try {
-    data.value = await $fetch<any[]>(`https://portfolio-backend-fnac.onrender.com/github/repos`);
-  } catch (error) {
-    console.error(error);
-  }
-}
+const { data: githubRepos, status } = await useAPI<RepositoryDto[]>({
+  url: '/github/repos',
+  options: { lazy: true },
+});
 
-function handleNavigateToProject(project: any) {
+const skeletonQuantity = ref(12);
+
+const isPending = computed(() => status.value === 'pending');
+
+function handleNavigateToProject(project: RepositoryDto) {
   navigateTo(project.html_url, { open: { target: '_blank' } });
 }
-
-onBeforeMount(getGithubRepositories);
 </script>
 
 <style lang="scss" scoped>

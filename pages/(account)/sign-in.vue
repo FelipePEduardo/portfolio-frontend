@@ -22,7 +22,6 @@
 <script lang="ts" setup>
 import type { AuthDto } from '~/DTO';
 
-
 /* #region Composables */
 
 const router = useRouter();
@@ -44,9 +43,15 @@ async function handleSignIn(e: Event) {
   e.preventDefault();
 
   try {
-    user.value = await $fetch<AuthDto>('https://portfolio-backend-fnac.onrender.com/auth/sign-in', {
-      method: 'post',
-      body: form.value,
+    const encodedCredentials = btoa(
+      `${form.value.email}:${form.value.password}`
+    );
+
+    user.value = await internalFetchAPI('/auth/sign-in', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${encodedCredentials}`,
+      },
     });
 
     router.push('/');
