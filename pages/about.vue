@@ -4,7 +4,8 @@
 
     <div class="content-wrapper">
       <div class="information-wrapper">
-        <img :src="data?.avatar_url" alt="" />
+        <Skeleton v-if="isPending" width="28.75rem" height="28.75rem" />
+        <img v-else :src="githubUser?.avatar_url" alt="" />
         <p>
           Me chamo Felipe Pereira Eduardo, tenho 23 anos e moro em Santo André,
           São Paulo.
@@ -15,8 +16,8 @@
             href="https://www.linkedin.com/company/tbdcagro/posts/?feedView=all"
             style="text-decoration: underline"
           >
-            @TBDC AgroSoftware </a
-          >. Atuo utilizando ferramentas como Vuejs, Nodejs, Typescript,
+            @TBDC AgroSoftware 
+          </a>. Utilizando ferramentas como Vuejs, Nodejs, Typescript,
           desenvolvendo features, aplicando refatorações e manutenções em
           sistema web.
           <br />
@@ -29,8 +30,9 @@
 
       <div class="bio-wrapper">
         <h3>Bio</h3>
-        <blockquote>
-          {{ data?.bio }}
+        <Skeleton v-if="isPending" width="15rem" height="1.5rem" />
+        <blockquote v-else>
+          {{ githubUser?.bio }}
         </blockquote>
       </div>
     </div>
@@ -38,19 +40,14 @@
 </template>
 
 <script lang="ts" setup>
-const data = ref();
+import type { UserInformationDto } from '~/DTO';
 
-async function getGithubInformations() {
-  try {
-    const apiData = await $fetch(`https://portfolio-backend-fnac.onrender.com/github/user`);
+const { data: githubUser, status } = await useAPI<UserInformationDto>({
+  url: '/github/user',
+  options: { lazy: true },
+});
 
-    data.value = apiData;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-onBeforeMount(getGithubInformations);
+const isPending = computed(() => status.value === 'pending');
 </script>
 
 <style lang="scss" scoped>
@@ -67,6 +64,8 @@ onBeforeMount(getGithubInformations);
       gap: 3rem;
 
       > img {
+        width: 28.75rem;
+        height: 28.75rem;
         border-radius: 0.5rem;
       }
 

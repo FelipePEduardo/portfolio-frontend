@@ -1,9 +1,9 @@
 <template>
   <div class="users-table-wrapper">
     <Table
-      :data="data"
+      :data="users?.data"
       :headers="headers"
-      :count="count"
+      :count="users?.count"
       clickable-row
       @click-row="handleNavigateToUser"
       @filter-change="changeFilter"
@@ -12,18 +12,17 @@
 </template>
 
 <script lang="ts" setup>
-import type { AuthDto, SearchResponse, UserSearchDto } from '~/DTO';
-import { mountUrl } from '~/helpers/mountUrl';
+import type { SearchResponse, UserSearchDto } from '~/DTO';
 
 definePageMeta({
   middleware: ['admin-master-middlaware'],
 });
 
-const cookie = useCookie<AuthDto>('user');
-
-const data = ref<UserSearchDto[]>([]);
-const count = ref(0);
 const filters = ref<Record<string, unknown>>({});
+
+const { data: users, refresh } = await useAuthenticatedAPI<
+  SearchResponse<UserSearchDto>
+>('/users/search', filters.value, { lazy: true });
 
 const headers = computed(() => [
   {
@@ -46,37 +45,18 @@ const headers = computed(() => [
   },
 ]);
 
-async function search() {
-  try {
-    const url = mountUrl('https://portfolio-backend-fnac.onrender.com/users/search', filters.value);
-
-    const { data: apiData, count: apiCount } = await $fetch<SearchResponse<UserSearchDto>>(url, {
-      headers: {
-        Authorization: `Bearer ${cookie.value.token}`,
-      },
-    });
-
-    data.value = apiData;
-    count.value = apiCount;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function changeFilter(newFilters: Record<string, unknown>) {
   filters.value = {
     name_contains: newFilters['name'],
     email_contains: newFilters['email'],
   };
 
-  await search();
+  await refresh();
 }
 
 function handleNavigateToUser(row: UserSearchDto) {
   navigateTo(`/users/${row.id}`);
 }
-
-onBeforeMount(search);
 </script>
 
 <style lang="scss">
