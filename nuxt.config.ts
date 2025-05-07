@@ -35,4 +35,13 @@ export default defineNuxtConfig({
     size: '24px',
     class: 'icon',
   },
+
+  runtimeConfig: {
+    public: {
+      apiBase: {
+        production: 'https://portfolio-backend-fnac.onrender.com',
+        development: 'http://localhost:3000',
+      },
+    },
+  },
 });
