@@ -22,7 +22,9 @@ export async function internalFetchAPI<T>(
   url: string,
   options: Record<string, unknown>
 ) {
-  const baseURL = API_URL ?? 'http://localhost:3000';
+  const config = useRuntimeConfig();
+
+  const baseURL = config.public.apiBase.production;
 
   return $fetch<T>(url, {
     baseURL,

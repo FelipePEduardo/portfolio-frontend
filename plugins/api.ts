@@ -1,7 +1,7 @@
-const { API_URL } = process.env;
-
 export default defineNuxtPlugin(() => {
-  const baseURL = API_URL ?? 'http://localhost:3000';
+  const config = useRuntimeConfig();
+
+  const baseURL = config.public.apiBase.production;
 
   const api = $fetch.create({
     baseURL,
