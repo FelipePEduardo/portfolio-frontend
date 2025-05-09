@@ -33,8 +33,15 @@ definePageMeta({
 
 const route = useRoute();
 const cookie = useCookie<AuthDto>('user');
-const { data: user } = await useAuthenticatedAPI<UserDto>(
-  `/users/${route.params.id}`
+const { data: user } = await useCustomFetch<UserDto>(
+  `/users/${route.params.id}`,
+  {},
+  {
+    lazy: true,
+    headers: {
+      Authorization: `Bearer ${cookie.value.token}`,
+    },
+  }
 );
 
 const selectOptions = ref([
@@ -49,13 +56,17 @@ async function save() {
   try {
     const id = Number(route.params.id);
 
-    user.value = await internalFetchAPI(`/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${cookie.value.token}`,
-      },
-      method: 'PATCH',
-      body: { ...user.value, userRole: user.value?.userRole.name },
-    });
+    user.value = await useAPI(
+      `/users/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${cookie.value.token}`,
+        },
+        method: 'PATCH',
+        body: { userRole: user.value?.userRole.name },
+      }
+    );
 
     window.alert('Usuário atualizado');
   } catch (error) {

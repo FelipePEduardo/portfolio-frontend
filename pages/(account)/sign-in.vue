@@ -25,9 +25,7 @@ import type { AuthDto } from '~/DTO';
 /* #region Composables */
 
 const router = useRouter();
-const user = useCookie('user', {
-  default: () => ({}),
-});
+const user = useCookie<AuthDto>('user');
 
 /* #endregion */
 
@@ -42,17 +40,10 @@ const form = ref<{ email?: string; password?: string }>({});
 async function handleSignIn(e: Event) {
   e.preventDefault();
 
-  try {
-    const encodedCredentials = btoa(
-      `${form.value.email}:${form.value.password}`
-    );
+  if (!form.value.email || !form.value.password) return;
 
-    user.value = await internalFetchAPI('/auth/sign-in', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${encodedCredentials}`,
-      },
-    });
+  try {
+    user.value = await useAuthFetch(form.value.email, form.value.password);
 
     router.push('/');
   } catch (error) {

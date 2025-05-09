@@ -10,7 +10,7 @@
           width="12.5rem"
           height="12.5rem"
         />
-      </template> 
+      </template>
       <template v-else>
         <a
           v-for="project in githubRepos"
@@ -29,10 +29,11 @@
 <script lang="ts" setup>
 import type { RepositoryDto } from '~/DTO';
 
-const { data: githubRepos, status } = await useAPI<RepositoryDto[]>({
-  url: '/github/repos',
-  options: { lazy: true },
-});
+const { data: githubRepos, status } = await useCustomFetch<RepositoryDto[]>(
+  '/github/repos',
+  {},
+  { lazy: true }
+);
 
 const skeletonQuantity = ref(12);
 

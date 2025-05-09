@@ -1,32 +1,19 @@
-import type { UseFetchOptions } from 'nuxt/app';
+type $FetchType = typeof $fetch;
+export type ReqOptions = Parameters<$FetchType>[1];
 
 import { mountUrl } from '~/helpers/mountUrl';
-const { API_URL } = process.env;
 
-type ParamsType<T> = {
-  url: string;
-  queryParams?: Record<string, unknown>;
-  options?: UseFetchOptions<T>;
-};
-
-export function useAPI<T>({ url, queryParams, options }: ParamsType<T>) {
-  const mountedUrl = queryParams ? mountUrl(url, queryParams) : url;
-
-  return useFetch(mountedUrl, {
-    ...options,
-    $fetch: useNuxtApp().$api,
-  });
-}
-
-export async function internalFetchAPI<T>(
+export async function useAPI<T>(
   url: string,
-  options: Record<string, unknown>
+  queryParams?: Record<string, unknown>,
+  options?: ReqOptions
 ) {
   const config = useRuntimeConfig();
+  const baseURL = config.public.apiTeste;
 
-  const baseURL = config.public.apiBase.production;
+  const mountedUrl = queryParams ? mountUrl(url, queryParams) : url;
 
-  return $fetch<T>(url, {
+  return $fetch<T>(mountedUrl, {
     baseURL,
     ...options,
   });

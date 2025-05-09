@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { SearchResponse, UserSearchDto } from '~/DTO';
+import type { AuthDto, SearchResponse, UserSearchDto } from '~/DTO';
 
 definePageMeta({
   middleware: ['admin-master-middlaware'],
@@ -20,9 +20,15 @@ definePageMeta({
 
 const filters = ref<Record<string, unknown>>({});
 
-const { data: users, refresh } = await useAuthenticatedAPI<
+const cookie = useCookie<AuthDto>('user');
+const { data: users, refresh } = await useCustomFetch<
   SearchResponse<UserSearchDto>
->('/users/search', filters.value, { lazy: true });
+>('/users/search', filters.value, {
+  lazy: true,
+  headers: {
+    Authorization: `Bearer ${cookie.value.token}`,
+  },
+});
 
 const headers = computed(() => [
   {

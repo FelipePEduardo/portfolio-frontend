@@ -53,10 +53,13 @@ const {
   data: skills,
   status,
   refresh,
-} = await useAPI<SearchResponse<SkillSearchDto>>({
-  url: '/skills/search',
-  options: { lazy: true },
-});
+} = await useCustomFetch<SearchResponse<SkillSearchDto>>(
+  '/skills/search',
+  {},
+  {
+    lazy: true,
+  }
+);
 
 /* #endregion */
 
@@ -92,10 +95,17 @@ function addOrUpdateSkill() {
 
 async function create() {
   try {
-    internalFetchAPI<SkillDto>('/skills', {
-      method: 'POST',
-      body: form.value,
-    });
+    await useAPI<SkillDto>(
+      '/skills',
+      {},
+      {
+        method: 'POST',
+        body: form.value,
+        headers: {
+          Authorization: `Bearer ${cookie.value.token}`,
+        },
+      }
+    );
 
     window.alert('Criado com sucesso');
     form.value = {};
@@ -107,10 +117,17 @@ async function create() {
 
 async function update() {
   try {
-    internalFetchAPI<SkillDto>(`/skills/${form.value.id}`, {
-      method: 'PATCH',
-      body: form.value,
-    });
+    await useAPI<SkillDto>(
+      `/skills/${form.value.id}`,
+      {},
+      {
+        method: 'PATCH',
+        body: form.value,
+        headers: {
+          Authorization: `Bearer ${cookie.value.token}`,
+        },
+      }
+    );
 
     window.alert('Atualizado com sucesso');
     resetFields();
@@ -122,9 +139,16 @@ async function update() {
 
 async function handleDelete(skill: SkillSearchDto) {
   try {
-    internalFetchAPI<void>(`/skills/${skill.id}`, {
-      method: 'DELETE',
-    });
+    await useAPI<void>(
+      `/skills/${skill.id}`,
+      {},
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${cookie.value.token}`,
+        },
+      }
+    );
 
     window.alert('Deletado com sucesso');
     await refresh();

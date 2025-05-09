@@ -16,8 +16,8 @@
             href="https://www.linkedin.com/company/tbdcagro/posts/?feedView=all"
             style="text-decoration: underline"
           >
-            @TBDC AgroSoftware 
-          </a>. Utilizando ferramentas como Vuejs, Nodejs, Typescript,
+            @TBDC AgroSoftware </a
+          >. Utilizando ferramentas como Vuejs, Nodejs, Typescript,
           desenvolvendo features, aplicando refatorações e manutenções em
           sistema web.
           <br />
@@ -42,10 +42,11 @@
 <script lang="ts" setup>
 import type { UserInformationDto } from '~/DTO';
 
-const { data: githubUser, status } = await useAPI<UserInformationDto>({
-  url: '/github/user',
-  options: { lazy: true },
-});
+const { data: githubUser, status } = await useCustomFetch<UserInformationDto>(
+  '/github/user',
+  {},
+  { lazy: true }
+);
 
 const isPending = computed(() => status.value === 'pending');
 </script>

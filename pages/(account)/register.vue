@@ -45,13 +45,17 @@ async function handleCreateAccount(e: Event) {
   e.preventDefault();
 
   try {
-    await internalFetchAPI('/users', {
-      method: 'POST',
-      body: form.value,
-    });
+    await useAPI(
+      '/users',
+      {},
+      {
+        method: 'POST',
+        body: form.value,
+      }
+    );
 
     window.alert('Conta criada com sucesso');
-    
+
     router.push('/sign-in');
   } catch (error) {
     console.error(error);

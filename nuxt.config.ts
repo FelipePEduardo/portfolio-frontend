@@ -38,6 +38,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
+      apiTeste: process.env.NUXT_PUBLIC_API_BASE ?? 'http://localhost:3000',
+
       apiBase: {
         production: 'https://portfolio-backend-fnac.onrender.com',
         development: 'http://localhost:3000',
